@@ -11,7 +11,7 @@ def get_productos():
     return jsonify(productos)
 
 def get_producto(id):
-    conection = get_db_connection()
+    conection = db_config.get_db_connection()
     cursor = conection.cursor(pymysql.cursors.DictCursor)
     cursor.execute('SELECT * FROM productos WHERE id = %s', (id,))
     producto = cursor.fetchone()
@@ -22,7 +22,7 @@ def get_producto(id):
 
 def create_producto():
     data = request.get_json()
-    conection = get_db_connection()
+    conection = db_config.get_db_connection()
     cursor = conection.cursor()
     cursor.execute('INSERT INTO productos (nombre, descripcion, precio, categoria_id) VALUES (%s, %s, %s, %s)',
                    (data['nombre'], data['descripcion'], data['precio'], data['categoria_id']))
@@ -32,7 +32,7 @@ def create_producto():
 
 def update_producto(id):
     data = request.get_json()
-    conection = get_db_connection()
+    conection = db_config.get_db_connection()
     cursor = conection.cursor()
     cursor.execute('UPDATE productos SET nombre = %s, descripcion = %s, precio = %s, categoria_id = %s WHERE id = %s',
                    (data['nombre'], data['descripcion'], data['precio'], data['categoria_id'], id))
@@ -41,7 +41,7 @@ def update_producto(id):
     return jsonify({'mensaje': 'Producto actualizado'})
 
 def delete_producto(id):
-    conection = get_db_connection()
+    conection = db_config.get_db_connection()
     cursor = conection.cursor()
     cursor.execute('DELETE FROM productos WHERE id = %s', (id,))
     conection.commit()

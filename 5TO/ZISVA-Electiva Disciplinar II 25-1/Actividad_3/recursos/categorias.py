@@ -10,7 +10,7 @@ def get_categorias():
     return jsonify(categorias)
 
 def get_categoria(id):
-    conection = get_db_connection()
+    conection = db_config.get_db_connection()
     cursor = conection.cursor(pymysql.cursors.DictCursor)
     cursor.execute('SELECT * FROM categorias WHERE id = %s', (id,))
     categoria = cursor.fetchone()
@@ -21,7 +21,7 @@ def get_categoria(id):
 
 def create_categoria():
     data = request.get_json()
-    conection = get_db_connection()
+    conection = db_config.get_db_connection()
     cursor = conection.cursor()
     cursor.execute('INSERT INTO categorias (nombre) VALUES (%s)', (data['nombre'],))
     conection.commit()
@@ -30,7 +30,7 @@ def create_categoria():
 
 def update_categoria(id):
     data = request.get_json()
-    conection = get_db_connection()
+    conection = db_config.get_db_connection()
     cursor = conection.cursor()
     cursor.execute('UPDATE categorias SET nombre = %s WHERE id = %s', (data['nombre'], id))
     conection.commit()
@@ -38,7 +38,7 @@ def update_categoria(id):
     return jsonify({'mensaje': 'Categoría actualizada'})
 
 def delete_categoria(id):
-    conection = get_db_connection()
+    conection = db_config.get_db_connection()
     cursor = conection.cursor()
     cursor.execute('DELETE FROM categorias WHERE id = %s', (id,))
     conection.commit()

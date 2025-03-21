@@ -14,7 +14,7 @@ Este repositorio contiene una API RESTful desarrollada con Flask y PyMySQL para 
 1.  **Clona el repositorio:**
 
     ```bash
-    git clone https://github.com/JowelBB/CUL/tree/940735de4bd9f0f22d67fbe093d24150c113a996/5TO/ZISVA-Electiva%20Disciplinar%20II%2025-1/Actividad_3
+    git clone https://github.com/JowelBB/CUL.git
     5TO/ZISVA-Electiva Disciplinar II 25-1/Actividad_3
     ```
 

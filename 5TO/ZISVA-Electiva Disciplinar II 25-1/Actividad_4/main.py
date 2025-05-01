@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from db_config import SessionLocal, engine
 from models import Base, Products
@@ -6,6 +7,15 @@ from recursos.crud_productos import get_product, get_all_products, create_produc
 from recursos.crud_categorias import get_category, get_all_categories, create_category, update_category, delete_category
 
 app = FastAPI()
+
+# CORS configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all request from any source
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods HTTP (GET, POST, PUT, DELETE, OPTIONS)
+    allow_headers=["*"],  # Allow all headers
+)
 
 #Create tables in the databse
 Base.metadata.create_all(bind=engine)

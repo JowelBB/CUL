@@ -103,8 +103,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Función para obtener y mostrar los datos de la API
-            function cargarTabla(apiUrl, tablaId) {
+            // Función para obtener y mostrar los datos de la API con un order especifico
+            function cargarTabla(apiUrl, tablaId, columnOrder) {
                 $.ajax({
                     url: apiUrl,
                     method: 'GET',
@@ -119,9 +119,8 @@
                             `;
 
                             // Obtener los encabezados de la tabla del primer objeto
-                            const headers = Object.keys(data[0]);
-                            headers.forEach(header => {
-                                tablaHTML += `<th>${header.charAt(0).toUpperCase() + header.slice(1)}</th>`; // Capitalizar la primera letra
+                            columnOrder.forEach(headerKey => {
+                                tablaHTML += `<th>${headerKey.charAt(0).toUpperCase() + headerKey.slice(1)}</th>`; // Capitalizar la primera letra
                             });
 
                             tablaHTML += `
@@ -133,8 +132,8 @@
                             // Llenar la tabla con los datos
                             data.forEach(item => {
                                 tablaHTML += `<tr>`;
-                                headers.forEach(header => {
-                                    tablaHTML += `<td>${item[header] !== null && item[header] !== undefined ? item[header] : ''}</td>`; // Handle null/undefined values
+                                columnOrder.forEach(headerKey => {
+                                    tablaHTML += `<td>${item[headerKey] !== null && item[headerKey] !== undefined ? item[headerKey] : ''}</td>`; // Handle null/undefined values
                                 });
                                 tablaHTML += `</tr>`;
                             });
@@ -156,12 +155,15 @@
                 });
             }
 
-            // Llamar a la función cargarTabla para los productos y las categorías
-            cargarTabla('http://localhost:8000/productos/', 'Productos');
-            cargarTabla('http://localhost:8000/categorias/', 'Categorías');
+            // Llamamos a la función cargarTabla para los productos y las categorías 
+            // Y definimos el order en el que muestran las tablas
 
-            // Nota: Asegúrate de que tu API esté corriendo en http://localhost:8000
-            // o ajusta la URL si está en una dirección diferente.
+            const productosColumnOrder = ['id', 'nombre', 'descripcion', 'precio', 'categoria_id'];
+            cargarTabla('http://localhost:8000/productos/', 'Productos', productosColumnOrder);
+
+            const categoriasColumnOrder = ['id', 'nombre'];
+            cargarTabla('http://localhost:8000/categorias/', 'Categorías', categoriasColumnOrder);
+
         });
     </script>
 </body>

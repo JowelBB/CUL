@@ -33,6 +33,13 @@ def delete_product(db: Session, product_id: int):
     db_product = db.query(Products).filter(Products.id == product_id).first()
     if db_product:
         db.delete(db_product)
-        db.commit()
-        return True
-    return False
+        try:
+            db.commit()
+            return True
+        except Exception as e:
+            print(f"Error durante el commit de eliminación del producto: {e}")
+            db.rollback()  # ¡hacer rollback en caso de error!
+            return False
+    else:
+        print("Producto no encontrado")
+        return False

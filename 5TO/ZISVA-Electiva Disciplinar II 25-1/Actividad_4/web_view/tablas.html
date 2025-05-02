@@ -194,19 +194,26 @@
     <script>
         $(document).ready(function() {
             const productosColumnOrder = ['id', 'nombre', 'descripcion', 'precio', 'categoria_id'];
-            const categoriasColumnOrder = ['id', 'name']; // Ajusta si tu API devuelve otro nombre para la categoría
-
+            const categoriasColumnOrder = ['id', 'nombre'];
+    
             function cargarTabla(apiUrl, tablaContainerId, columnOrder) {
                 $.ajax({
                     url: apiUrl,
                     method: 'GET',
                     dataType: 'json',
                     success: function(data) {
-                        if (data && data.length > 0) {
-                            let tablaHTML = `
-                                <table class="table table-striped table-bordered">
-                                    <thead>
-                                        <tr>
+                        let tableData = [];
+                        if (Array.isArray(data) && data.length > 0) {
+                        tableData = data;
+                        } else if (typeof data === 'object' && data !== null) {
+                            // Si la respuesta es un único objeto, lo ponemos en un array para la iteración
+                            tableData = [data];
+                        }
+                        if (tableData.length > 0) {
+                            let tablaHTML = 
+                            `<table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
                             `;
                             columnOrder.forEach(headerKey => {
                                 tablaHTML += `<th>${headerKey.charAt(0).toUpperCase() + headerKey.slice(1)}</th>`;
@@ -216,7 +223,7 @@
                                     </thead>
                                     <tbody>
                             `;
-                            data.forEach(item => {
+                            tableData.forEach(item => {
                                 tablaHTML += `<tr>`;
                                 columnOrder.forEach(headerKey => {
                                     tablaHTML += `<td>${item[headerKey] !== null && item[headerKey] !== undefined ? item[headerKey] : ''}</td>`;
@@ -226,7 +233,7 @@
                             tablaHTML += `
                                     </tbody>
                                 </table>
-                                <hr>
+                            <hr>
                             `;
                             $(`#${tablaContainerId}`).html(tablaHTML);
                         } else {
@@ -239,32 +246,31 @@
                     }
                 });
             }
-
+    
             // Cargar tablas iniciales
             cargarTabla('http://localhost:8000/productos/', 'productos-table-container', productosColumnOrder);
             cargarTabla('http://localhost:8000/categorias/', 'categorias-table-container', categoriasColumnOrder);
-
+    
             // Funcionalidad para Productos
             $('#enviar-producto').on('click', function() {
                 const action = $('#producto-action').val();
                 const id = $('#producto-id-input').val();
-
+    
                 if (action === 'filtrar' && id) {
                     cargarTabla(`http://localhost:8000/productos/${id}`, 'productos-table-container', productosColumnOrder);
                 } else if (action === 'crear') {
                     $('#modal-producto').css('display', 'block');
                     $('#producto-form')[0].reset(); // Limpiar el formulario
                 } else if (action === 'actualizar' && id) {
-                    // Aquí podremos cargar los datos del producto con ese ID en el modal para edición
-                    cargarDatosProducto(id); // Función a implementar
+                    cargarDatosProducto(id);
                     $('#modal-producto').css('display', 'block');
                 } else if (action === 'eliminar' && id) {
                     if (confirm(`¿Estás seguro de eliminar el producto con ID ${id}?`)) {
-                        eliminarProducto(id); // Función a implementar
+                        eliminarProducto(id);
                     }
                 }
             });
-
+    
             $('#guardar-producto').on('click', function() {
                 const action = $('#producto-action').val();
                 const id = $('#producto-id-input').val();
@@ -272,58 +278,58 @@
                 const descripcion = $('#descripcion').val();
                 const precio = $('#precio').val();
                 const categoria_id = $('#categoria_id').val();
-                const data = { nombre: nombre, descripcion: descripcion, precio: precio, categoria_id: categoria_id };
-
+                const data = { name: nombre, description: descripcion, price: parseInt(precio), categoria_id: parseInt(categoria_id) };
+    
                 if (action === 'crear') {
-                    crearProducto(data); // Función a implementar
+                    crearProducto(data);
                 } else if (action === 'actualizar' && id) {
-                    actualizarProducto(id, data); // Función a implementar
+                    actualizarProducto(id, data);
                 }
                 $('#modal-producto').css('display', 'none');
             });
-
+    
             $('#close-producto-modal').on('click', function() {
                 $('#modal-producto').css('display', 'none');
             });
-
-            // Funcionalidad para Categorías (similar a Productos)
+    
+            // Funcionalidad para Categorías
             $('#enviar-categoria').on('click', function() {
                 const action = $('#categoria-action').val();
                 const id = $('#categoria-id-input').val();
-
+    
                 if (action === 'filtrar' && id) {
                     cargarTabla(`http://localhost:8000/categorias/${id}`, 'categorias-table-container', categoriasColumnOrder);
                 } else if (action === 'crear') {
                     $('#modal-categoria').css('display', 'block');
                     $('#categoria-form')[0].reset();
                 } else if (action === 'actualizar' && id) {
-                    cargarDatosCategoria(id); // Función a implementar
+                    cargarDatosCategoria(id);
                     $('#modal-categoria').css('display', 'block');
                 } else if (action === 'eliminar' && id) {
                     if (confirm(`¿Estás seguro de eliminar la categoría con ID ${id}?`)) {
-                        eliminarCategoria(id); // Función a implementar
+                        eliminarCategoria(id);
                     }
                 }
             });
-
+    
             $('#guardar-categoria').on('click', function() {
                 const action = $('#categoria-action').val();
                 const id = $('#categoria-id-input').val();
                 const nombre = $('#categoria-form #nombre').val();
-                const data = { name: nombre }; // Ajustar la clave según tu API
-
+                const data = { name: nombre };
+    
                 if (action === 'crear') {
-                    crearCategoria(data); // Función a implementar
+                    crearCategoria(data);
                 } else if (action === 'actualizar' && id) {
-                    actualizarCategoria(id, data); // Función a implementar
+                    actualizarCategoria(id, data);
                 }
                 $('#modal-categoria').css('display', 'none');
             });
-
+    
             $('#close-categoria-modal').on('click', function() {
                 $('#modal-categoria').css('display', 'none');
             });
-
+    
             // Funciones CRUD
             function crearProducto(data) {
                 $.ajax({
@@ -341,7 +347,7 @@
                     }
                 });
             }
-
+    
             function cargarDatosProducto(id) {
                 $.ajax({
                     url: `http://localhost:8000/productos/${id}`,
@@ -352,6 +358,8 @@
                         $('#descripcion').val(data.descripcion);
                         $('#precio').val(data.precio);
                         $('#categoria_id').val(data.categoria_id);
+                        // Establecer la acción en el desplegable a "actualizar" al cargar datos
+                        $('#producto-action').val('actualizar');
                     },
                     error: function(error) {
                         console.error('Error al cargar datos del producto:', error);
@@ -360,7 +368,7 @@
                     }
                 });
             }
-
+    
             function actualizarProducto(id, data) {
                 $.ajax({
                     url: `http://localhost:8000/productos/${id}`,
@@ -377,7 +385,7 @@
                     }
                 });
             }
-
+    
             function eliminarProducto(id) {
                 $.ajax({
                     url: `http://localhost:8000/productos/${id}`,
@@ -392,7 +400,7 @@
                     }
                 });
             }
-
+    
             function crearCategoria(data) {
                 $.ajax({
                     url: 'http://localhost:8000/categorias/',
@@ -409,14 +417,18 @@
                     }
                 });
             }
-
+    
             function cargarDatosCategoria(id) {
                 $.ajax({
                     url: `http://localhost:8000/categorias/${id}`,
                     method: 'GET',
                     dataType: 'json',
                     success: function(data) {
-                        $('#categoria-form #nombre').val(data.name); // Ajusta si la clave es diferente
+                        console.log("Respuesta de cargarDatosCategoria:", data);
+                        $('#categoria-form #nombre').val(data.nombre); // Ajusta si la clave es diferente
+                        // Establecer la acción en el desplegable a "actualizar" al cargar datos
+                        $('#categoria-action').val('actualizar');
+                        $('#categoria-id-input').val(id);
                     },
                     error: function(error) {
                         console.error('Error al cargar datos de la categoría:', error);
@@ -425,7 +437,7 @@
                     }
                 });
             }
-
+    
             function actualizarCategoria(id, data) {
                 $.ajax({
                     url: `http://localhost:8000/categorias/${id}`,
@@ -442,12 +454,13 @@
                     }
                 });
             }
-
+    
             function eliminarCategoria(id) {
                 $.ajax({
                     url: `http://localhost:8000/categorias/${id}`,
                     method: 'DELETE',
                     success: function(response) {
+                        console.log("Respuesta de eliminarCategoria:", response);
                         alert('Categoría eliminada exitosamente');
                         cargarTabla('http://localhost:8000/categorias/', 'categorias-table-container', categoriasColumnOrder);
                     },
@@ -457,7 +470,7 @@
                     }
                 });
             }
-
+    
             // Cerrar modales haciendo clic fuera
             window.onclick = function(event) {
                 if (event.target == document.getElementById('modal-producto')) {

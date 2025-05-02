@@ -27,7 +27,14 @@ def delete_category(db: Session, category_id: int):
     db_category = db.query(Categories).filter(Categories.id == category_id).first()
     if db_category:
         db.delete(db_category)
-        db.commit
-        return True
-    return False
+        try:
+            db.commit()
+            return True
+        except Exception as e:
+            print(f"Error durante el commit: {e}")
+            db.rollback()  # hacer rollback en caso de error
+            return False
+    else:
+        print("Categoría no encontrada")
+        return False
     

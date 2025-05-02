@@ -1,8 +1,9 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from db_config import SessionLocal, engine
 from models import Base, Products
+from recursos.schemas import CategoryCreate
 from recursos.crud_productos import get_product, get_all_products, create_product, update_product, delete_product
 from recursos.crud_categorias import get_category, get_all_categories, create_category, update_category, delete_category
 
@@ -29,8 +30,18 @@ def get_db():
         db.close()
 
 # Rutes for products
-@app.post("/productos/")
+"""@app.post("/productos/")
 async def get_item_endpoint(name: str, description: str, price: int, categoria_id: int, db: Session = Depends(get_db)):
+    return create_product(db, name, description, price, categoria_id)"""
+
+@app.post("/productos/")
+async def get_item_endpoint(
+    name: str = Body(...),
+    description: str = Body(...),
+    price: int = Body(...),
+    categoria_id: int = Body(...) ,
+    db: Session = Depends(get_db)
+):
     return create_product(db, name, description, price, categoria_id)
 
 @app.get("/productos/")
@@ -60,9 +71,13 @@ async def delete_item_endpoint(product_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Product not found")
 
 # Rutes for Categories
-@app.post("/categorias/")
+"""@app.post("/categorias/")
 async def get_category_endpoint(name: str, db: Session = Depends(get_db)):
-    return create_category(db, name)
+    return create_category(db, name)"""
+
+@app.post("/categorias/")
+async def get_category_endpoint(category_data: CategoryCreate = Body(...), db: Session = Depends(get_db)):
+    return create_category(db, category_data.name)
 
 @app.get("/categorias/")
 async def get_all_categories_endpoint(db: Session = Depends(get_db)):

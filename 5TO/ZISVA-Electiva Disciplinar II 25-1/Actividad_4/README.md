@@ -66,6 +66,35 @@ Sigue estos pasos para configurar y ejecutar la API:
         python main.py
         ```
         *(Nota: La API también intentará crear las tablas al inicio. Si prefieres un control más explícito, puedes ejecutar un script separado utilizando SQLAlchemy.)*
+        
+    * Crea una base de datos MySQL llamada `mi_api`.
+    * Crea las tablas `productos` y `categorias` usando el siguiente script SQL:
+
+        ```sql
+        CREATE DATABASE mi_api;
+        USE mi_api;
+
+        CREATE TABLE categorias (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nombre VARCHAR(255) NOT NULL
+        );
+
+        CREATE TABLE productos (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nombre VARCHAR(255) NOT NULL,
+            descripcion TEXT,
+            precio DECIMAL(10, 2) NOT NULL,
+            categoria_id INT,
+            FOREIGN KEY (categoria_id) REFERENCES categorias(id)
+        );
+        ```
+
+    * Actualiza las credenciales de la base de datos en el archivo `db_config.py`:
+
+        ```python
+        "mysql+pymysql://tuusuario:tucontraseña@localhost:3306/mi_api"
+        ```
+
 
 6.  **Ejecuta la API con Uvicorn:**
     ```bash
@@ -100,19 +129,19 @@ La API expone los siguientes endpoints para la gestión de productos y categorí
 * **`PUT /categorias/{category_id}`:** Actualiza una categoría existente por su ID. Requiere un cuerpo JSON con el campo `name` (string).
 * **`DELETE /categorias/{category_id}`:** Elimina una categoría específica por su ID.
 
-## Estructura del Código
+## Estructura del Código:
 
-CUL/
-└── 5TO/
-└── ZISVA-Electiva Disciplinar II 25-1/
-└── Actividad_4/
-├── db_config.py      # Configuración de la base de datos
-├── main.py           # Archivo principal de la API (FastAPI)
-├── models.py         # Definición de los modelos de la base de datos (SQLAlchemy)
-├── recursos/
-│   ├── crud_categorias.py # Lógica CRUD para categorías
-│   └── crud_productos.py  # Lógica CRUD para productos
-└── requirements.txt  # (Opcional) Lista de dependencias
+*    CUL/
+*    └── 5TO/
+*    └── ZISVA-Electiva Disciplinar II 25-1/
+*    └── Actividad_4/
+*    ├── db_config.py      # Configuración de la base de datos
+*    ├── main.py           # Archivo principal de la API (FastAPI)
+*    ├── models.py         # Definición de los modelos de la base de datos (SQLAlchemy)
+*    ├── recursos/
+*    │   ├── crud_categorias.py # Lógica CRUD para categorías
+*    │   └── crud_productos.py  # Lógica CRUD para productos
+*    └── requirements.txt  # (Opcional) Lista de dependencias
 
 ## Consumo de la API desde el Frontend (`Tablas.html`)
 

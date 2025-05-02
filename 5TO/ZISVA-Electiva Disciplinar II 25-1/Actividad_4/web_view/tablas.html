@@ -425,7 +425,7 @@
                     dataType: 'json',
                     success: function(data) {
                         console.log("Respuesta de cargarDatosCategoria:", data);
-                        $('#categoria-form #nombre').val(data.nombre); // Ajusta si la clave es diferente
+                        $('#categoria-form #nombre').val(data.nombre);
                         // Establecer la acción en el desplegable a "actualizar" al cargar datos
                         $('#categoria-action').val('actualizar');
                         $('#categoria-id-input').val(id);

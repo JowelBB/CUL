@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from db_config import SessionLocal, engine
 from models import Base, Products
-from recursos.schemas import CategoryCreate
+from recursos.schemas import CategoryCreate, CategoryUpdate
 from recursos.crud_productos import get_product, get_all_products, create_product, update_product, delete_product
 from recursos.crud_categorias import get_category, get_all_categories, create_category, update_category, delete_category
 
@@ -35,13 +35,7 @@ async def get_item_endpoint(name: str, description: str, price: int, categoria_i
     return create_product(db, name, description, price, categoria_id)"""
 
 @app.post("/productos/")
-async def get_item_endpoint(
-    name: str = Body(...),
-    description: str = Body(...),
-    price: int = Body(...),
-    categoria_id: int = Body(...) ,
-    db: Session = Depends(get_db)
-):
+async def get_item_endpoint(name: str = Body(...), description: str = Body(...), price: int = Body(...), categoria_id: int = Body(...) , db: Session = Depends(get_db)):
     return create_product(db, name, description, price, categoria_id)
 
 @app.get("/productos/")
@@ -57,7 +51,8 @@ async def get_item_endpoint(product_id: int, db: Session = Depends(get_db)):
     return product
 
 @app.put("/productos/{product_id}")
-async def update_item_endpoint(product_id: int, name: str = None, description: str = None, price: int = None, categoria_id: int = None, db: Session = Depends(get_db)):
+async def update_item_endpoint(product_id: int, name: str = Body(...), description: str = Body(...), price: int = Body(...), categoria_id: int = Body(...), db: Session = Depends(get_db)):
+    print(f"Intentando actualizar",product_id, name, description, price, categoria_id)
     updated_product = update_product(db, product_id, name, description, price, categoria_id)
     if updated_product is None:
         raise HTTPException(status_code=404, detail="Product not found")
@@ -92,8 +87,8 @@ async def get_category_endpoint(category_id: int, db: Session = Depends(get_db))
     return category
 
 @app.put("/categorias/{category_id}")
-async def update_category_endpoint(category_id: int, name: str = None, db: Session = Depends(get_db)):
-    updated_category = update_category(db, category_id, name)
+async def update_category_endpoint(category_id: int, category_data: CategoryUpdate = Body(...), db: Session = Depends(get_db)):
+    updated_category = update_category(db, category_id, category_data.name)
     if updated_category is None:
         raise HTTPException(status_code=404, detail="Category not found")
     return updated_category

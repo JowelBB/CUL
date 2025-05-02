@@ -376,6 +376,7 @@
                     contentType: 'application/json',
                     data: JSON.stringify(data),
                     success: function(response) {
+                        console.log("Respuesta de actualizarProducto", response)
                         alert('Producto actualizado exitosamente');
                         cargarTabla('http://localhost:8000/productos/', 'productos-table-container', productosColumnOrder);
                     },
@@ -425,7 +426,7 @@
                     dataType: 'json',
                     success: function(data) {
                         console.log("Respuesta de cargarDatosCategoria:", data);
-                        $('#categoria-form #nombre').val(data.nombre); // Ajusta si la clave es diferente
+                        $('#categoria-form #nombre').val(data.nombre);
                         // Establecer la acción en el desplegable a "actualizar" al cargar datos
                         $('#categoria-action').val('actualizar');
                         $('#categoria-id-input').val(id);
@@ -445,6 +446,7 @@
                     contentType: 'application/json',
                     data: JSON.stringify(data),
                     success: function(response) {
+                        console.log("Respuesta de actualizarCategoria:", response);
                         alert('Categoría actualizada exitosamente');
                         cargarTabla('http://localhost:8000/categorias/', 'categorias-table-container', categoriasColumnOrder);
                     },

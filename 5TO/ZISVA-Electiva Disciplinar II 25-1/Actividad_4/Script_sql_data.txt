@@ -1,0 +1,30 @@
+-- Insertar datos aleatorios en la tabla categorias
+INSERT INTO categorias (nombre) VALUES
+('Electrónica'),
+('Ropa y Accesorios'),
+('Hogar y Cocina'),
+('Libros'),
+('Deportes y Aire Libre'),
+('Salud y Cuidado Personal'),
+('Herramientas y Mejoras para el Hogar'),
+('Juguetes y Juegos'),
+('Automotriz'),
+('Alimentos y Bebidas'),
+('Música y Películas'); -- Insertamos un registro extra para asegurar al menos 10
+
+-- Insertar datos aleatorios en la tabla productos
+INSERT INTO productos (nombre, descripcion, precio, categoria_id) VALUES
+('Smartphone de Última Generación', 'Pantalla AMOLED, 128GB Almacenamiento, Cámara 48MP', 799099, 1),
+('Camiseta de Algodón Orgánico', 'Tallas y colores variados, suave y cómoda', 25050, 2),
+('Juego de Sartenes Antiadherentes (3 piezas)', 'Aluminio forjado, aptas para lavavajillas', 89095, 3),
+('El Señor de los Anillos (Trilogía)', 'Edición de bolsillo, JRR Tolkien', 35075, 4),
+('Bicicleta de Montaña Aro 29', 'Marco de aluminio, 21 velocidades', 349000, 5),
+('Cepillo de Dientes Eléctrico', 'Con 3 cabezales de repuesto, temporizador de 2 minutos', 45020, 6),
+('Taladro Inalámbrico 20V', 'Incluye batería y cargador, velocidad variable', 129099, 7),
+('Set de Bloques de Construcción (1000 piezas)', 'Para niños de 3 años en adelante, colores surtidos', 59000, 8),
+('Aceite de Motor Sintético 5W-30 (5 litros)', 'Para motores a gasolina y diésel', 39050, 9),
+('Café Arábica Molido (1kg)', 'Tostado medio, aroma intenso', 18090, 10),
+('Vinilo - Abbey Road (The Beatles)', 'Edición remasterizada', 29099, 11),
+('Smartwatch Deportivo', 'GPS integrado, monitor de frecuencia cardíaca, resistente al agua', 149050, 1),
+('Pantalones Vaqueros Slim Fit', 'Tallas variadas, tejido denim elástico', 49099, 2),
+('Robot Aspirador Inteligente', 'Control por app, ideal para suelos duros y alfombras', 279000, 3);

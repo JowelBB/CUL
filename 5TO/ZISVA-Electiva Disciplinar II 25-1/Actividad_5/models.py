@@ -29,6 +29,6 @@ class Tokens(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, index=True)
     token = Column(String(255))
-    status = Column(Integer)
+    active = Column(Integer)
 
 

@@ -83,9 +83,9 @@ Sigue estos pasos para configurar y ejecutar la API:
 
         CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            username VARCHAR(255) NOT NULL UNIQUE,
-            email VARCHAR(255) UNIQUE,
-            full_name VARCHAR(255),
+            username VARCHAR(55) NOT NULL UNIQUE,
+            email VARCHAR(55) UNIQUE,
+            full_name VARCHAR(55),
             hashed_password VARCHAR(255) NOT NULL,
             disabled BOOLEAN DEFAULT FALSE
         );
@@ -95,7 +95,6 @@ Sigue estos pasos para configurar y ejecutar la API:
             nombre VARCHAR(255) NOT NULL
         );
 
-
         CREATE TABLE IF NOT EXISTS productos (
             id INT AUTO_INCREMENT PRIMARY KEY,
             nombre VARCHAR(255) NOT NULL,
@@ -103,16 +102,6 @@ Sigue estos pasos para configurar y ejecutar la API:
             precio DECIMAL(10, 2) NOT NULL,
             categoria_id INT,
             FOREIGN KEY (categoria_id) REFERENCES categorias(id) ON DELETE SET NULL
-        );
-
-
-        CREATE TABLE IF NOT EXISTS users (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            full_name VARCHAR(55) NOT NULL,
-            email VARCHAR(55) NOT NULL,
-            username VARCHAR(55) NOT NULL,
-            password_hash VARCHAR(255) NOT NULL,
-            active TINYINT(1) NOT NULL DEFAULT 1
         );
         ```
 
@@ -187,7 +176,7 @@ La API expone los siguientes endpoints para la gestión de productos, categoría
 * ├── signup.html     # Página de registro
 * ├── index.html      # Dashboard principal (protegido)
 * └── tables.html     # Página de tablas (productos/categorías - protegido)
-* └── style.css       # (Ejemplo, si tienes CSS externo)
+* ├── style.css       # (Ejemplo, si tienes CSS externo)
 * └── script.js       # (Ejemplo, si tienes JS externo)
 
 ## Consumo de la API desde el Frontend (`signin.html`, `index.html`, `tables.html`)
@@ -201,13 +190,13 @@ El frontend ahora consta de varias páginas HTML que interactúan con los endpoi
     * Si la autenticación es exitosa, el token JWT (`access_token` y `token_type`) recibido se almacena en el `localStorage` del navegador.
     * El usuario es redirigido a `index.html` o `tables.html`.
 * **`index.html` y `tables.html`**:
-    * Al cargar estas páginas, se verifica la presencia del `access_token` en el `localStorage`. Si no existe, el usuario es redirigido a `login.html`.
+    * Al cargar estas páginas, se verifica la presencia del `access_token` en el `localStorage`. Si no existe, el usuario es redirigido a `signin.html`.
     * Incluyen un botón "Cerrar Sesión" que, al ser clickeado, elimina el `access_token` y `token_type` del `localStorage` y redirige al usuario a `signin.html`, cerrando la sesión.
 
 ### Acceso a Rutas Protegidas
 
 * Para acceder a los endpoints de la API marcados como **(PROTEGIDA)**, el JavaScript del frontend debe incluir el token JWT en el encabezado `Authorization` de cada solicitud `fetch` (o `XMLHttpRequest`). El formato es `Authorization: Bearer <your_access_token>`.
-* Si una solicitud a una ruta protegida devuelve un error `401 Unauthorized` (debido a un token ausente, inválido o expirado), el frontend limpiará el token del `localStorage` y redirigirá al usuario a `login.html` para que vuelva a iniciar sesión.
+* Si una solicitud a una ruta protegida devuelve un error `401 Unauthorized` (debido a un token ausente, inválido o expirado), el frontend limpiará el token del `localStorage` y redirigirá al usuario a `signin.html` para que vuelva a iniciar sesión.
 
 ### Operaciones CRUD (tables.html)
 
